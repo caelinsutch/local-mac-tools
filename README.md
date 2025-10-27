@@ -68,4 +68,4 @@ bun run lint
 
 ## License
 
-MIT
+GNUv3

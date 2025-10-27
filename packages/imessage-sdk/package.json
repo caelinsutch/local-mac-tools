@@ -23,8 +23,6 @@
 		"test:integration": "vitest run __tests__/integration.test.ts",
 		"test:all": "vitest run",
 		"test:coverage": "vitest run --coverage",
-		"lint": "biome check .",
-		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --noEmit",
 		"check-types": "bun tsc --noEmit"
 	},
