@@ -5,7 +5,7 @@
  * Run with: ts-node examples/basic-usage.ts
  */
 
-import { IMessageClient, appleTimeToDate } from "../src";
+import { appleTimeToDate, IMessageClient } from "../src";
 
 async function main() {
 	console.log("iMessage SDK - Basic Usage Example\n");
@@ -47,9 +47,7 @@ async function main() {
 			console.log(`- ${displayName}`);
 			if (chat.lastMessage) {
 				const lastMessageDate = appleTimeToDate(chat.lastMessage.date);
-				console.log(
-					`  Last message: ${lastMessageDate.toLocaleString()}`,
-				);
+				console.log(`  Last message: ${lastMessageDate.toLocaleString()}`);
 			}
 		}
 		console.log();

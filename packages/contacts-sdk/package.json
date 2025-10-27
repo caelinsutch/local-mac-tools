@@ -1,7 +1,7 @@
 {
-	"name": "@imessage-tools/sdk",
+	"name": "@imessage-tools/contacts-sdk",
 	"version": "1.0.0",
-	"description": "A TypeScript SDK for querying iMessage data on macOS",
+	"description": "A TypeScript SDK for querying macOS Contacts data",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -29,13 +29,11 @@
 		"check-types": "bun tsc --noEmit"
 	},
 	"keywords": [
-		"imessage",
+		"contacts",
 		"macos",
 		"typescript",
 		"sdk",
-		"messages",
-		"chat",
-		"sms"
+		"addressbook"
 	],
 	"author": "",
 	"license": "MIT",

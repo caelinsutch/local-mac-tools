@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 // Unmock utils to test real implementations
 vi.unmock("../src/utils");
@@ -7,9 +7,9 @@ import {
 	appleTimeToDate,
 	dateToAppleTime,
 	formatHandle,
+	getDefaultDatabasePath,
 	isGroupChat,
 	parseAttributedBody,
-	getDefaultDatabasePath,
 	validateDatabasePath,
 } from "../src/utils";
 
@@ -62,7 +62,9 @@ describe("utils", () => {
 			const convertedDate = appleTimeToDate(appleTime);
 
 			// Allow small difference due to precision
-			expect(Math.abs(convertedDate.getTime() - originalDate.getTime())).toBeLessThan(1000);
+			expect(
+				Math.abs(convertedDate.getTime() - originalDate.getTime()),
+			).toBeLessThan(1000);
 		});
 	});
 
@@ -158,7 +160,7 @@ describe("utils", () => {
 		it("should include home directory", () => {
 			const path = getDefaultDatabasePath();
 			expect(path.length).toBeGreaterThan(0);
-			expect(path).toMatch(/^[\/~]/); // Should start with / or ~
+			expect(path).toMatch(/^[/~]/); // Should start with / or ~
 		});
 	});
 

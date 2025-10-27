@@ -70,9 +70,10 @@ export function parseAttributedBody(buffer: Buffer | null): string | null {
 		// This is a simplified extraction - real implementation would need proper binary parsing
 		const text = buffer.toString("utf8");
 		// Look for readable text in the buffer
+		// biome-ignore lint/suspicious/noControlCharactersInRegex: Necessary for parsing the buffer
 		const match = text.match(/NSString[^\x00]*?\x00([^\x00]+)/);
 		return match ? match[1] : null;
-	} catch (error) {
+	} catch (_error) {
 		return null;
 	}
 }

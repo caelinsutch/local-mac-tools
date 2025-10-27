@@ -1,21 +1,21 @@
 import Database from "better-sqlite3";
 import type {
-	IMessageConfig,
-	Message,
-	Handle,
-	Chat,
 	Attachment,
-	EnrichedMessage,
-	MessageFilter,
+	Chat,
 	ChatFilter,
 	ConversationStats,
+	EnrichedMessage,
+	Handle,
+	IMessageConfig,
+	Message,
+	MessageFilter,
 } from "./types";
 import {
 	appleTimeToDate,
 	dateToAppleTime,
 	getDefaultDatabasePath,
-	validateDatabasePath,
 	parseAttributedBody,
+	validateDatabasePath,
 } from "./utils";
 
 /**
@@ -252,7 +252,9 @@ export class IMessageClient {
       WHERE id = ? OR uncanonicalized_id = ?
       LIMIT 1
     `;
-		return (this.db.prepare(query).get(identifier, identifier) as Handle) || null;
+		return (
+			(this.db.prepare(query).get(identifier, identifier) as Handle) || null
+		);
 	}
 
 	/**
@@ -299,7 +301,10 @@ export class IMessageClient {
       FROM message
       WHERE handle_id = ?
     `;
-		const result = this.db.prepare(query).get(handleId) as Record<string, number>;
+		const result = this.db.prepare(query).get(handleId) as Record<
+			string,
+			number
+		>;
 
 		return {
 			total: result.total || 0,
@@ -366,12 +371,14 @@ export class IMessageClient {
 			totalMessages: (result.total as number) || 0,
 			sentMessages: (result.sent as number) || 0,
 			receivedMessages: (result.received as number) || 0,
-			firstMessageDate: result.first_date !== null && result.first_date !== undefined
-				? appleTimeToDate(result.first_date as number)
-				: null,
-			lastMessageDate: result.last_date !== null && result.last_date !== undefined
-				? appleTimeToDate(result.last_date as number)
-				: null,
+			firstMessageDate:
+				result.first_date !== null && result.first_date !== undefined
+					? appleTimeToDate(result.first_date as number)
+					: null,
+			lastMessageDate:
+				result.last_date !== null && result.last_date !== undefined
+					? appleTimeToDate(result.last_date as number)
+					: null,
 		};
 	}
 
@@ -392,9 +399,9 @@ export class IMessageClient {
       LIMIT ?
     `;
 
-		const chats = this.db
-			.prepare(query)
-			.all(limit) as (Chat & { last_message_date: number })[];
+		const chats = this.db.prepare(query).all(limit) as (Chat & {
+			last_message_date: number;
+		})[];
 
 		return chats.map((chat) => {
 			// Get participants
@@ -417,11 +424,11 @@ export class IMessageClient {
         ORDER BY m.date DESC
         LIMIT 1
       `;
-			const lastMessage = this.db
-				.prepare(lastMessageQuery)
-				.get(chat.ROWID) as Message | undefined;
+			const lastMessage = this.db.prepare(lastMessageQuery).get(chat.ROWID) as
+				| Message
+				| undefined;
 
-			const { last_message_date, ...chatData } = chat;
+			const { ...chatData } = chat;
 			return {
 				...chatData,
 				lastMessage,
@@ -446,7 +453,9 @@ export class IMessageClient {
 		const message: EnrichedMessage = {
 			ROWID: r.ROWID as number,
 			guid: r.guid as string,
-			text: (r.text as string | null) || parseAttributedBody(r.attributedBody as Buffer | null),
+			text:
+				(r.text as string | null) ||
+				parseAttributedBody(r.attributedBody as Buffer | null),
 			handle_id: r.handle_id as number,
 			subject: r.subject as string | null,
 			service: r.service as string,

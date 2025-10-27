@@ -4,7 +4,7 @@
     "": {
       "name": "imessage-tools",
       "devDependencies": {
-        "@biomejs/biome": "^2.2.3",
+        "@biomejs/biome": "2.3.1",
         "turbo": "^2.5.8",
         "typescript": "5.9.2",
       },
@@ -16,6 +16,22 @@
       },
       "devDependencies": {
         "wrangler": "^4.4.0",
+      },
+    },
+    "packages/contacts-sdk": {
+      "name": "@imessage-tools/contacts-sdk",
+      "version": "1.0.0",
+      "dependencies": {
+        "better-sqlite3": "^11.5.0",
+      },
+      "devDependencies": {
+        "@imessage-tools/typescript-config": "workspace:*",
+        "@types/better-sqlite3": "^7.6.12",
+        "@types/node": "^22.0.0",
+        "@vitest/coverage-v8": "^2.1.8",
+        "tsup": "^8.3.5",
+        "typescript": "^5.7.2",
+        "vitest": "^2.1.8",
       },
     },
     "packages/imessage-sdk": {
@@ -137,6 +153,8 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.25.4", "", { "os": "win32", "cpu": "ia32" }, "sha512-i1sW+1i+oWvQzSgfRcxxG2k4I9n3O9NRqy8U+uugaT2Dy7kLO9Y7wI72haOahxceMX8hZAzgGou1FhndRldxRg=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.4", "", { "os": "win32", "cpu": "x64" }, "sha512-nOT2vZNw6hJ+z43oP1SPea/G/6AbN6X+bGNhNuq8NtRHy4wsMhw765IKLNmnjek7GvjWBYQ8Q5VBoYTFg9y1UQ=="],
+
+    "@imessage-tools/contacts-sdk": ["@imessage-tools/contacts-sdk@workspace:packages/contacts-sdk"],
 
     "@imessage-tools/sdk": ["@imessage-tools/sdk@workspace:packages/imessage-sdk"],
 

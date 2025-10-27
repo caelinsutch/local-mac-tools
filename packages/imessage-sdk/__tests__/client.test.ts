@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { IMessageClient } from "../src/client";
-import type { Message, Handle, Chat } from "../src/types";
+import type { Chat, Handle } from "../src/types";
 
 // Mock better-sqlite3
 vi.mock("better-sqlite3", () => {
@@ -51,9 +51,7 @@ describe("IMessageClient", () => {
 			const { validateDatabasePath } = await import("../src/utils");
 			vi.mocked(validateDatabasePath).mockReturnValueOnce(false);
 
-			expect(() => new IMessageClient()).toThrow(
-				"iMessage database not found",
-			);
+			expect(() => new IMessageClient()).toThrow("iMessage database not found");
 		});
 	});
 
@@ -93,7 +91,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getMessages({ chatId: 123 });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("chat_message_join");
 			expect(mockAll).toHaveBeenCalledWith(123);
 		});
@@ -113,7 +111,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getMessages({ isFromMe: true });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("is_from_me");
 			expect(mockAll).toHaveBeenCalledWith(1);
 		});
@@ -133,7 +131,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getMessages({ limit: 50, offset: 100 });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("LIMIT");
 			expect(query).toContain("OFFSET");
 			expect(mockAll).toHaveBeenCalledWith(50, 100);
@@ -154,7 +152,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getMessages({ searchText: "hello" });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("LIKE");
 			expect(mockAll).toHaveBeenCalledWith("%hello%");
 		});
@@ -248,7 +246,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getChats({ isGroup: true });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("chat_identifier LIKE 'chat%'");
 		});
 
@@ -267,7 +265,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.getChats({ displayName: "John" });
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("display_name LIKE");
 			expect(mockAll).toHaveBeenCalledWith("%John%");
 		});
@@ -386,7 +384,7 @@ describe("IMessageClient", () => {
 			const client = new IMessageClient();
 			client.searchHandles("123");
 
-			const query = mockPrepare.mock.calls[0][0] as string;
+			const query = mockPrepare.mock.calls[0][0] as unknown as string;
 			expect(query).toContain("LIKE");
 			expect(mockAll).toHaveBeenCalledWith("%123%", "%123%");
 		});
