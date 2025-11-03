@@ -24,7 +24,7 @@
 		"test:all": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"typecheck": "tsc --noEmit",
-		"check-types": "bun tsc --noEmit"
+		"check-types": "tsc --noEmit"
 	},
 	"keywords": [
 		"imessage",
@@ -38,16 +38,16 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"better-sqlite3": "^11.5.0"
+		"better-sqlite3": "catalog:"
 	},
 	"devDependencies": {
-		"@types/better-sqlite3": "^7.6.12",
-		"@types/node": "^22.0.0",
-		"@vitest/coverage-v8": "^2.1.8",
+		"@types/better-sqlite3": "catalog:",
+		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
 		"@imessage-tools/typescript-config": "workspace:*",
-		"tsup": "^8.3.5",
-		"typescript": "^5.7.2",
-		"vitest": "^2.1.8"
+		"tsup": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	},
 	"engines": {
 		"node": ">=14.0.0"

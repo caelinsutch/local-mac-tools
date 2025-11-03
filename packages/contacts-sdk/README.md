@@ -15,7 +15,7 @@ A TypeScript SDK for querying macOS Contacts data. Search and retrieve contact i
 ## Requirements
 
 - macOS (darwin)
-- Node.js >= 14.0.0
+- Node.js >= 22.0.0
 - Full Disk Access permission for your terminal or application
 
 ## Installation

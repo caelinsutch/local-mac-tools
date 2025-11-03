@@ -1,3 +1,4 @@
+import { serve } from "@hono/node-server";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
@@ -22,7 +23,6 @@ server.registerTool(
 );
 
 const test = z.string();
-
 
 server.registerTool(
 	"echoInput",
@@ -102,7 +102,7 @@ const port = 3000;
 // For local development with Bun
 if (import.meta.main) {
 	console.log(`Starting MCP server on http://localhost:${port}`);
-	console.log(`MCP endpoint: http://localhost:${port}/mcp`);
+	console.log(`MCP endpoint: http://localhost:${port}`);
 	console.log("");
 	console.log("Add this to your Claude Desktop config:");
 	console.log(
@@ -110,7 +110,7 @@ if (import.meta.main) {
 			{
 				"imessage-tools": {
 					command: "npx",
-					args: ["-y", "mcp-remote", `http://localhost:${port}/mcp`],
+					args: ["-y", "mcp-remote", `http://localhost:${port}`],
 				},
 			},
 			null,
@@ -120,7 +120,7 @@ if (import.meta.main) {
 	console.log("");
 }
 
-export default {
-	port,
-	fetch: router.fetch,
-};
+serve({
+  fetch: router.fetch,
+  port,
+})

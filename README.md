@@ -32,26 +32,26 @@ TypeScript SDK for querying macOS Contacts data. Retrieve contact information, p
 ## Requirements
 
 - **OS**: macOS (Darwin) only
-- **Node**: >= 14.0.0
-- **Package Manager**: Bun 1.3.1
+- **Node**: >= 22.0.0
+- **Package Manager**: pnpm 10.20.0
 
 ## Development
 
 ```bash
 # Install dependencies
-bun install
+pnpm install
 
 # Build all packages
-bun run build
+pnpm run build
 
 # Run in development mode
-bun run dev
+pnpm run dev
 
 # Type checking
-bun run check-types
+pnpm run check-types
 
 # Lint
-bun run lint
+pnpm run lint
 ```
 
 ## Project Structure

@@ -37,13 +37,10 @@
 		"mcp.json"
 	],
 	"scripts": {
-		"dev": "bun run --watch src/index.ts",
-		"dev:workers": "wrangler dev",
-		"deploy": "wrangler deploy --minify",
-		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
-		"check-types": "bun tsc --noEmit",
-		"test": "bun test",
-		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:8787/mcp"
+		"dev": "tsx --watch src/index.ts",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:3000/mcp"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.19.6",
@@ -51,11 +48,10 @@
 		"@modelcontextprotocol/sdk": "^1.20.2",
 		"fetch-to-node": "^2.1.0",
 		"hono": "^4.10.3",
-		"zod": "3.25.50",
+		"zod": "catalog:",
 		"zodown": "^0.2.1"
 	},
 	"devDependencies": {
-		"@types/node": "^24.9.2",
-		"wrangler": "^4.4.0"
+		"@types/node": "catalog:"
 	}
 }

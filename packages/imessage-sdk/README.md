@@ -15,7 +15,7 @@ A type-safe TypeScript SDK for querying and viewing iMessage data on macOS. This
 ## Prerequisites
 
 - macOS (iMessage database is only available on Mac)
-- Node.js 14 or higher
+- Node.js 22 or higher
 - iMessage enabled on your Mac
 - **Full Disk Access** permission for your terminal/application
 
@@ -40,7 +40,7 @@ npm install @imessage-tools/sdk
 Or if you're working in the monorepo:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Quick Start
@@ -376,26 +376,26 @@ For large message databases (100k+ messages), consider using:
 ### Building
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ### Testing
 
 ```bash
-npm test
+pnpm test
 ```
 
 ### Watch Mode
 
 ```bash
-npm run dev
-npm run test:watch
+pnpm run dev
+pnpm run test:watch
 ```
 
 ### Coverage
 
 ```bash
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ## Troubleshooting

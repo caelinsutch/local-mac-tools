@@ -20,7 +20,8 @@ A Model Context Protocol (MCP) server that provides access to macOS Contacts dat
 
 ### Required
 - **macOS** operating system (darwin)
-- **Node.js** >= 14.0.0 or **Bun** >= 1.0.0
+- **Node.js** >= 22.0.0
+- **pnpm** >= 10.20.0
 - **Full Disk Access** permission (see setup below)
 
 ### Setting Up Full Disk Access
@@ -44,14 +45,14 @@ The MCP server needs Full Disk Access to read the macOS Contacts database:
 From the repository root:
 
 ```bash
-bun install
+pnpm install
 ```
 
 Or from the `apps/api` directory:
 
 ```bash
 cd apps/api
-bun install
+pnpm install
 ```
 
 ## Development
@@ -59,7 +60,7 @@ bun install
 Start the development server:
 
 ```bash
-bun run dev
+pnpm run dev
 ```
 
 The server will start at `http://localhost:8787` (Cloudflare Workers default port).
@@ -100,7 +101,7 @@ Add the MCP server configuration:
 Make sure the MCP server is running:
 
 ```bash
-bun run dev
+pnpm run dev
 ```
 
 ### Step 3: Restart Claude Desktop
@@ -262,7 +263,7 @@ Get the total number of contacts.
 
 ### "Cannot find module '@imessage-tools/contacts-sdk'" error
 
-**Solution:** Run `bun install` from the repository root to install workspace dependencies.
+**Solution:** Run `pnpm install` from the repository root to install workspace dependencies.
 
 ### No contacts returned from searches
 
