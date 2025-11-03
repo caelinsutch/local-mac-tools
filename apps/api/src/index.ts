@@ -121,6 +121,6 @@ if (import.meta.main) {
 }
 
 serve({
-  fetch: router.fetch,
-  port,
-})
+	fetch: router.fetch,
+	port,
+});

@@ -1,8 +1,8 @@
 {
-  "mcpServers": {
-    "imessage-tools": {
-      "command": "npx",
-      "args": ["-y", "@imessage-tools/mcp-server"]
-    }
-  }
+	"mcpServers": {
+		"imessage-tools": {
+			"command": "npx",
+			"args": ["-y", "@imessage-tools/mcp-server"]
+		}
+	}
 }
