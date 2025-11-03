@@ -1,16 +1,64 @@
 {
-	"name": "api",
+	"name": "@imessage-tools/mcp-server",
+	"version": "1.0.0",
+	"description": "A Model Context Protocol (MCP) server for accessing macOS Contacts data through Claude Desktop and other MCP clients",
 	"type": "module",
+	"main": "src/index.ts",
+	"author": "Caelin Sutch",
+	"license": "MIT",
+	"keywords": [
+		"mcp",
+		"model-context-protocol",
+		"macos",
+		"contacts",
+		"claude",
+		"hono",
+		"imessage",
+		"addressbook"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/caelinsutch/local-mac-tools.git",
+		"directory": "apps/api"
+	},
+	"bugs": {
+		"url": "https://github.com/caelinsutch/local-mac-tools/issues"
+	},
+	"homepage": "https://github.com/caelinsutch/local-mac-tools/tree/main/apps/api#readme",
+	"engines": {
+		"node": ">=14.0.0"
+	},
+	"os": [
+		"darwin"
+	],
+	"files": [
+		"src",
+		"README.md",
+		"mcp.json"
+	],
 	"scripts": {
-		"dev": "wrangler dev",
+		"dev": "bun run --watch src/index.ts",
+		"dev:workers": "wrangler dev",
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
-		"check-types": "bun tsc --noEmit"
+		"check-types": "bun tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:8787/mcp"
 	},
 	"dependencies": {
-		"hono": "^4.10.3"
+		"@hono/node-server": "^1.19.6",
+		"@imessage-tools/contacts-sdk": "workspace:*",
+		"@modelcontextprotocol/sdk": "^1.20.2",
+		"fetch-to-node": "^2.1.0",
+		"hono": "^4.10.3",
+		"zod": "3.25.50",
+		"zodown": "^0.2.1"
 	},
 	"devDependencies": {
+		"@types/node": "^24.9.2",
+		"@vitest/coverage-v8": "^4.0.6",
+		"vitest": "^4.0.6",
 		"wrangler": "^4.4.0"
 	}
 }
