@@ -3,7 +3,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { type Context, Hono } from "hono";
 import { z } from "zod";
-import { zodown } from 'zodown';
+import { zodown } from "zodown";
 
 const server = new McpServer({
 	name: "imessage-tools",
@@ -21,29 +21,26 @@ server.registerTool(
 	}),
 );
 
-
 const test = z.string();
 
+
 server.registerTool(
-  "echoInput",
-  {
-    title: "Echo Input",
-    description: "Returns the input supplied to this tool.",
-    inputSchema: {
+	"echoInput",
+	{
+		title: "Echo Input",
+		description: "Returns the input supplied to this tool.",
+		inputSchema: {
 			value: zodown(test),
 		},
-  },
-  (args) => {
+	},
+	(args) => {
 		return {
 			content: [{ type: "text", text: String(args.value) }],
 		};
-	}
+	},
 );
 
-
-
 const router = new Hono();
-
 
 router.post("/", async (c: Context) => {
 	const { req, res } = toReqRes(c.req.raw);
@@ -56,14 +53,16 @@ router.post("/", async (c: Context) => {
 		await transport.handleRequest(req, res, req.body as any);
 	} catch {
 		if (!res.headersSent) {
-			res.writeHead(500).end(JSON.stringify({
-				jsonrpc: "2.0",
-				error: {
-					code: -32603,
-					message: "Internal server error",
-				},
-				id: null,
-			}));
+			res.writeHead(500).end(
+				JSON.stringify({
+					jsonrpc: "2.0",
+					error: {
+						code: -32603,
+						message: "Internal server error",
+					},
+					id: null,
+				}),
+			);
 		}
 	}
 	return toFetchResponse(res);

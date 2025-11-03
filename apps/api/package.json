@@ -42,8 +42,7 @@
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
 		"check-types": "bun tsc --noEmit",
-		"test": "vitest run",
-		"test:watch": "vitest",
+		"test": "bun test",
 		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:8787/mcp"
 	},
 	"dependencies": {
@@ -57,8 +56,6 @@
 	},
 	"devDependencies": {
 		"@types/node": "^24.9.2",
-		"@vitest/coverage-v8": "^4.0.6",
-		"vitest": "^4.0.6",
 		"wrangler": "^4.4.0"
 	}
 }
