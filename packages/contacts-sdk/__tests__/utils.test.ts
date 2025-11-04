@@ -3,18 +3,16 @@ import { parseDelimitedResult } from "../src/utils";
 
 describe("parseDelimitedResult", () => {
 	it("should parse empty result", () => {
-		const result = parseDelimitedResult(
-			"[]",
-			([name, phone]) => (name && phone ? { name, phone } : null),
+		const result = parseDelimitedResult("[]", ([name, phone]) =>
+			name && phone ? { name, phone } : null,
 		);
 
 		expect(result).toEqual([]);
 	});
 
 	it("should parse single item", () => {
-		const result = parseDelimitedResult(
-			"John Doe|555-1234",
-			([name, phone]) => (name && phone ? { name, phone } : null),
+		const result = parseDelimitedResult("John Doe|555-1234", ([name, phone]) =>
+			name && phone ? { name, phone } : null,
 		);
 
 		expect(result).toEqual([{ name: "John Doe", phone: "555-1234" }]);
