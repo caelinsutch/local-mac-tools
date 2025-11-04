@@ -37,11 +37,8 @@
 	],
 	"author": "",
 	"license": "MIT",
-	"dependencies": {
-		"better-sqlite3": "catalog:"
-	},
+	"dependencies": {},
 	"devDependencies": {
-		"@types/better-sqlite3": "catalog:",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"@imessage-tools/typescript-config": "workspace:*",

@@ -1,4 +1,5 @@
 import { serve } from "@hono/node-server";
+import { ContactsClient } from "@imessage-tools/contacts-sdk";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
@@ -22,6 +23,8 @@ server.registerTool(
 	}),
 );
 
+const contactsClient = new ContactsClient();
+
 const test = z.string();
 
 server.registerTool(
@@ -36,6 +39,33 @@ server.registerTool(
 	(args) => {
 		return {
 			content: [{ type: "text", text: String(args.value) }],
+		};
+	},
+);
+
+server.registerTool(
+	"contacts_list",
+	{
+		title: "contacts_list",
+		description: "Get all contacts from macOS Contacts app.",
+	},
+	async () => {
+		const contacts = await contactsClient.getAllContacts(10);
+		console.log(contacts);
+		return {
+			content: [
+				{
+					type: "text",
+					text: String(
+						contacts
+							.map(
+								(contact) =>
+									`${contact.fullName} - ${contact.phoneNumbers.map((phone) => phone.number).join(", ")}`,
+							)
+							.join("\n"),
+					),
+				},
+			],
 		};
 	},
 );

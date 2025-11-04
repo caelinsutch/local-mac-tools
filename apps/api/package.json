@@ -39,7 +39,6 @@
 	"scripts": {
 		"dev": "tsx --watch src/index.ts",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
 		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:3000/mcp"
 	},
 	"dependencies": {
