@@ -44,26 +44,41 @@ server.registerTool(
 );
 
 server.registerTool(
-	"contacts_list",
+	"contacts_search",
 	{
-		title: "contacts_list",
-		description: "Get all contacts from macOS Contacts app.",
+		title: "contacts_search",
+		description:
+			"Search contacts by name or phone number. Automatically detects search type if not specified.",
+		inputSchema: {
+			name: z.string().optional(),
+			phone: z.string().optional(),
+		},
 	},
-	async () => {
-		const contacts = await contactsClient.getAllContacts(10);
-		console.log(contacts);
+	async (args) => {
+		const { name, phone } = args
+
+		// Auto-detect search type if not specified
+		const contacts =
+			phone
+				? await contactsClient.searchByPhone(phone)
+				: await contactsClient.searchByName(name);
+
+		if (contacts.length === 0) {
+			return {
+				content: [
+					{
+						type: "text",
+						text: `No contacts found matching "${query}"`,
+					},
+				],
+			};
+		}
+
 		return {
 			content: [
 				{
 					type: "text",
-					text: String(
-						contacts
-							.map(
-								(contact) =>
-									`${contact.fullName} - ${contact.phoneNumbers.map((phone) => phone.number).join(", ")}`,
-							)
-							.join("\n"),
-					),
+					text: contacts.map((contact) => `${contact.name} - ${contact.phone}`).join("\n"),
 				},
 			],
 		};
