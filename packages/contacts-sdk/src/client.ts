@@ -1,7 +1,4 @@
-import { execSync } from "node:child_process";
-import { unlinkSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { executeOSAScript, parseDelimitedResult } from "./utils";
 
 export interface Contact {
 	name: string;
@@ -37,32 +34,14 @@ export class ContactsClient {
 	return resultList as text
 end tell`;
 
-		const tmpFile = join(tmpdir(), `contacts-search-${Date.now()}.scpt`);
-		writeFileSync(tmpFile, script);
+		const result = await executeOSAScript(script);
 
-		try {
-			const result = execSync(`osascript "${tmpFile}"`, {
-				encoding: "utf-8",
-			}).trim();
-
-			if (result === "[]") {
-				return [];
+		return parseDelimitedResult(result, ([name, phone]) => {
+			if (name && phone) {
+				return { name, phone };
 			}
-
-			const contacts: Contact[] = [];
-			const items = result.split(";");
-
-			for (const item of items) {
-				const [name, phone] = item.split("|");
-				if (name && phone) {
-					contacts.push({ name, phone });
-				}
-			}
-
-			return contacts;
-		} finally {
-			unlinkSync(tmpFile);
-		}
+			return null;
+		});
 	}
 
 	/**
@@ -95,31 +74,13 @@ end tell`;
 	return resultList as text
 end tell`;
 
-		const tmpFile = join(tmpdir(), `contacts-search-${Date.now()}.scpt`);
-		writeFileSync(tmpFile, script);
+		const result = await executeOSAScript(script);
 
-		try {
-			const result = execSync(`osascript "${tmpFile}"`, {
-				encoding: "utf-8",
-			}).trim();
-
-			if (result === "[]") {
-				return [];
+		return parseDelimitedResult(result, ([name, phone]) => {
+			if (name && phone) {
+				return { name, phone };
 			}
-
-			const contacts: Contact[] = [];
-			const items = result.split(";");
-
-			for (const item of items) {
-				const [name, phone] = item.split("|");
-				if (name && phone) {
-					contacts.push({ name, phone });
-				}
-			}
-
-			return contacts;
-		} finally {
-			unlinkSync(tmpFile);
-		}
+			return null;
+		});
 	}
 }
