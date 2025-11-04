@@ -70,27 +70,29 @@ end tell`;
 	 */
 	async searchByPhone(phone: string): Promise<Contact[]> {
 		const script = `tell application "Contacts"
-	set matchingContacts to {}
-	set allPeople to every person
+	set matchingPeople to (people whose value of phones contains "${phone}")
 
-	repeat with aPerson in allPeople
-		set personPhones to phones of aPerson
-		repeat with aPhone in personPhones
-			if value of aPhone contains "${phone}" then
-				set personName to name of aPerson
-				set phoneValue to value of aPhone
-				set end of matchingContacts to personName & "|" & phoneValue
-				exit repeat
-			end if
-		end repeat
-	end repeat
-
-	if (count of matchingContacts) = 0 then
+	if (count of matchingPeople) = 0 then
 		return "[]"
 	end if
 
+	set resultList to {}
+	repeat with aPerson in matchingPeople
+		set personName to name of aPerson
+
+		try
+			set phoneList to phones of aPerson
+			repeat with aPhone in phoneList
+				set phoneValue to value of aPhone
+				if phoneValue contains "${phone}" then
+					set end of resultList to personName & "|" & phoneValue
+				end if
+			end repeat
+		end try
+	end repeat
+
 	set AppleScript's text item delimiters to ";"
-	return matchingContacts as text
+	return resultList as text
 end tell`;
 
 		const tmpFile = join(tmpdir(), `contacts-search-${Date.now()}.scpt`);
