@@ -1,0 +1,49 @@
+{
+	"name": "@imessage-tools/logger",
+	"version": "1.0.0",
+	"description": "Shared Winston-based logger for imessage-tools",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format cjs,esm --dts",
+		"build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"logger",
+		"winston",
+		"typescript"
+	],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"winston": "^3.17.0"
+	},
+	"devDependencies": {
+		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"@imessage-tools/typescript-config": "workspace:*",
+		"tsup": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	},
+	"engines": {
+		"node": ">=14.0.0"
+	}
+}

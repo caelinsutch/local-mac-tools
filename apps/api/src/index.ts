@@ -1,11 +1,14 @@
 import { serve } from "@hono/node-server";
 import { ContactsClient } from "@imessage-tools/contacts-sdk";
+import { createLogger } from "@imessage-tools/logger";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { type Context, Hono } from "hono";
 import { z } from "zod";
 import { zodown } from "zodown";
+
+const logger = createLogger({ service: "mcp-server" });
 
 const server = new McpServer({
 	name: "imessage-tools",
@@ -55,39 +58,62 @@ server.registerTool(
 		},
 	},
 	async (args) => {
-		const { name, phone } = args
+		const { name, phone } = args;
+		const query = phone || name;
 
-		// Auto-detect search type if not specified
-		const contacts =
-			phone
+		logger.info("contacts_search called", { name, phone });
+
+		try {
+			// Auto-detect search type if not specified
+			const contacts = phone
 				? await contactsClient.searchByPhone(phone)
 				: await contactsClient.searchByName(name);
 
-		if (contacts.length === 0) {
+			logger.info("contacts_search results", {
+				query,
+				resultCount: contacts.length,
+			});
+
+			if (contacts.length === 0) {
+				return {
+					content: [
+						{
+							type: "text",
+							text: `No contacts found matching "${query}"`,
+						},
+					],
+				};
+			}
+
 			return {
 				content: [
 					{
 						type: "text",
-						text: `No contacts found matching "${query}"`,
+						text: contacts
+							.map((contact) => `${contact.name} - ${contact.phone}`)
+							.join("\n"),
+					},
+				],
+			};
+		} catch (error) {
+			logger.error("contacts_search error", error);
+			return {
+				content: [
+					{
+						type: "text",
+						text: `Error searching contacts: ${error instanceof Error ? error.message : "Unknown error"}`,
 					},
 				],
 			};
 		}
-
-		return {
-			content: [
-				{
-					type: "text",
-					text: contacts.map((contact) => `${contact.name} - ${contact.phone}`).join("\n"),
-				},
-			],
-		};
 	},
 );
 
 const router = new Hono();
 
 router.post("/", async (c: Context) => {
+	logger.info("Received POST request");
+
 	const { req, res } = toReqRes(c.req.raw);
 	const transport: StreamableHTTPServerTransport =
 		new StreamableHTTPServerTransport({
@@ -95,8 +121,9 @@ router.post("/", async (c: Context) => {
 		});
 	await server.connect(transport);
 	try {
-		await transport.handleRequest(req, res, req.body as any);
-	} catch {
+		await transport.handleRequest(req, res, req.body as unknown);
+	} catch (error) {
+		logger.error("Error handling MCP request", error);
 		if (!res.headersSent) {
 			res.writeHead(500).end(
 				JSON.stringify({
@@ -113,6 +140,7 @@ router.post("/", async (c: Context) => {
 	return toFetchResponse(res);
 });
 router.get("/", (c: Context) => {
+	logger.warn("Received GET request - method not allowed");
 	const { res } = toReqRes(c.req.raw);
 	res.writeHead(405).end(
 		JSON.stringify({
@@ -128,6 +156,7 @@ router.get("/", (c: Context) => {
 });
 
 router.delete("/", (c: Context) => {
+	logger.warn("Received DELETE request - method not allowed");
 	const { res } = toReqRes(c.req.raw);
 	res.writeHead(405).end(
 		JSON.stringify({
@@ -146,8 +175,8 @@ const port = 3000;
 
 // For local development with Bun
 if (import.meta.main) {
-	console.log(`Starting MCP server on http://localhost:${port}`);
-	console.log(`MCP endpoint: http://localhost:${port}`);
+	logger.info(`Starting MCP server on http://localhost:${port}`);
+	logger.info(`MCP endpoint: http://localhost:${port}`);
 	console.log("");
 	console.log("Add this to your Claude Desktop config:");
 	console.log(
@@ -169,3 +198,5 @@ serve({
 	fetch: router.fetch,
 	port,
 });
+
+logger.info("MCP server started successfully");
