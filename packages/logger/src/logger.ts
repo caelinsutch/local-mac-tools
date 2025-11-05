@@ -10,11 +10,7 @@ export interface LoggerOptions {
  * Create a configured Winston logger instance
  */
 export const createLogger = (options: LoggerOptions = {}): winston.Logger => {
-	const {
-		level = "info",
-		service = "macos-tools",
-		silent = false,
-	} = options;
+	const { level = "info", service = "macos-tools", silent = false } = options;
 
 	const format = winston.format.combine(
 		winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
