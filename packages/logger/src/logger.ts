@@ -10,7 +10,11 @@ export interface LoggerOptions {
  * Create a configured Winston logger instance
  */
 export const createLogger = (options: LoggerOptions = {}): winston.Logger => {
-	const { level = "info", service = "imessage-tools", silent = false } = options;
+	const {
+		level = "info",
+		service = "imessage-tools",
+		silent = false,
+	} = options;
 
 	const format = winston.format.combine(
 		winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
@@ -23,7 +27,9 @@ export const createLogger = (options: LoggerOptions = {}): winston.Logger => {
 		winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
 		winston.format.colorize(),
 		winston.format.printf(({ timestamp, level, message, service, ...meta }) => {
-			const metaStr = Object.keys(meta).length ? JSON.stringify(meta, null, 2) : "";
+			const metaStr = Object.keys(meta).length
+				? JSON.stringify(meta, null, 2)
+				: "";
 			return `[${timestamp}] ${level} [${service}]: ${message} ${metaStr}`;
 		}),
 	);
@@ -39,7 +45,7 @@ export const createLogger = (options: LoggerOptions = {}): winston.Logger => {
 			}),
 		],
 	});
-}
+};
 
 /**
  * Default logger instance

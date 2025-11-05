@@ -1,17 +1,17 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(bun add:*)",
-      "Bash(bun run typecheck)",
-      "Bash(mkdir:*)",
-      "Bash(bun run:*)",
-      "WebFetch(domain:www.npmjs.com)",
-      "Bash(osascript:*)",
-      "Bash(pnpm install)",
-      "Bash(pnpm build)",
-      "Bash(git add:*)"
-    ],
-    "deny": [],
-    "ask": []
-  }
+	"permissions": {
+		"allow": [
+			"Bash(bun add:*)",
+			"Bash(bun run typecheck)",
+			"Bash(mkdir:*)",
+			"Bash(bun run:*)",
+			"WebFetch(domain:www.npmjs.com)",
+			"Bash(osascript:*)",
+			"Bash(pnpm install)",
+			"Bash(pnpm build)",
+			"Bash(git add:*)"
+		],
+		"deny": [],
+		"ask": []
+	}
 }
