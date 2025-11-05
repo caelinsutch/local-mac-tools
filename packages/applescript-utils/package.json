@@ -1,7 +1,7 @@
 {
-	"name": "@macos-tools/contacts-sdk",
+	"name": "@macos-tools/applescript-utils",
 	"version": "1.0.0",
-	"description": "A TypeScript SDK for querying macOS Contacts data",
+	"description": "Shared AppleScript execution utilities for macOS",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -18,32 +18,27 @@
 	"scripts": {
 		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
-		"test": "vitest run --exclude __tests__/integration.test.ts",
-		"test:watch": "vitest --exclude __tests__/integration.test.ts",
-		"test:integration": "vitest run __tests__/integration.test.ts",
-		"test:all": "vitest run",
+		"test": "vitest run",
+		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
-		"typecheck": "tsc --noEmit",
 		"check-types": "tsc --noEmit"
 	},
 	"keywords": [
-		"contacts",
+		"applescript",
+		"osascript",
 		"macos",
 		"typescript",
-		"sdk",
-		"addressbook"
+		"utilities"
 	],
 	"author": "",
 	"license": "MIT",
-	"dependencies": {
-		"@macos-tools/applescript-utils": "workspace:*"
-	},
+	"dependencies": {},
 	"devDependencies": {
+		"@macos-tools/typescript-config": "workspace:*",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@macos-tools/typescript-config": "workspace:*",
 		"tsup": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"

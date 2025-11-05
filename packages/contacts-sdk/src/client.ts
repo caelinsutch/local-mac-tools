@@ -1,4 +1,7 @@
-import { executeOSAScript, parseDelimitedResult } from "./utils";
+import {
+	executeOSAScript,
+	parseDelimitedResult,
+} from "@macos-tools/applescript-utils";
 
 export interface Contact {
 	name: string;
