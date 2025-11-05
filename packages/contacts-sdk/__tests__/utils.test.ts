@@ -74,7 +74,7 @@ describe("parseDelimitedResult", () => {
 		const result = parseDelimitedResult(
 			"apple|5;banana|3;orange|7",
 			([fruit, count]) =>
-				fruit && count ? { fruit, count: Number.parseInt(count) } : null,
+				fruit && count ? { fruit, count: Number.parseInt(count, 10) } : null,
 		);
 
 		expect(result).toEqual([
