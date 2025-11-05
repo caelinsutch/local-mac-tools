@@ -6,8 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { type Context, Hono } from "hono";
-import { z } from "zod";
-import { zodown } from "zodown";
+import { z } from "zod/v3";
 
 const logger = createLogger({ service: "mcp-server" });
 
@@ -16,36 +15,7 @@ const server = new McpServer({
 	version: "1.0.0",
 });
 
-server.registerTool(
-	"helloWorld",
-	{
-		title: "helloWorld",
-		description: "Say hello to the world",
-	},
-	() => ({
-		content: [{ type: "text", text: String("Hello World!") }],
-	}),
-);
-
 const contactsClient = new ContactsClient();
-
-const test = z.string();
-
-server.registerTool(
-	"echoInput",
-	{
-		title: "Echo Input",
-		description: "Returns the input supplied to this tool.",
-		inputSchema: {
-			value: zodown(test),
-		},
-	},
-	(args) => {
-		return {
-			content: [{ type: "text", text: String(args.value) }],
-		};
-	},
-);
 
 server.registerTool(
 	"contacts_search",
@@ -68,7 +38,9 @@ server.registerTool(
 			// Auto-detect search type if not specified
 			const contacts = phone
 				? await contactsClient.searchByPhone(phone)
-				: await contactsClient.searchByName(name);
+				: name
+				? await contactsClient.searchByName(name)
+				: [];
 
 			logger.info("contacts_search results", {
 				query,
@@ -122,7 +94,7 @@ router.post("/", async (c: Context) => {
 		});
 	await server.connect(transport);
 	try {
-		await transport.handleRequest(req, res, req.body as unknown);
+		await transport.handleRequest(req, res, (req as any).body as unknown);
 	} catch (error) {
 		logger.error("Error handling MCP request", error);
 		if (!res.headersSent) {

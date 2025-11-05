@@ -42,7 +42,7 @@
 		"dev": "tsx --watch src/index.ts",
 		"build": "tsup && chmod +x dist/*.js",
 		"start": "node dist/index.js",
-		"typecheck": "tsc --noEmit",
+		"check-types": "tsc --noEmit",
 		"inspect": "npx -y @modelcontextprotocol/inspector npx mcp-remote http://localhost:3000/mcp"
 	},
 	"dependencies": {
@@ -52,8 +52,7 @@
 		"@modelcontextprotocol/sdk": "^1.20.2",
 		"fetch-to-node": "^2.1.0",
 		"hono": "^4.10.3",
-		"zod": "catalog:",
-		"zodown": "^0.2.1"
+		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@types/node": "catalog:",

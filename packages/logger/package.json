@@ -23,7 +23,7 @@
 		"test:coverage": "vitest run --coverage",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
-		"typecheck": "tsc --noEmit"
+		"check-types": "tsc --noEmit"
 	},
 	"keywords": [
 		"logger",
@@ -33,12 +33,12 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"winston": "^3.17.0"
+		"chalk": "^5.6.2"
 	},
 	"devDependencies": {
+		"@macos-tools/typescript-config": "workspace:*",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@macos-tools/typescript-config": "workspace:*",
 		"tsup": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"
