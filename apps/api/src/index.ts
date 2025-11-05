@@ -39,8 +39,8 @@ server.registerTool(
 			const contacts = phone
 				? await contactsClient.searchByPhone(phone)
 				: name
-				? await contactsClient.searchByName(name)
-				: [];
+					? await contactsClient.searchByName(name)
+					: [];
 
 			logger.info("contacts_search results", {
 				query,
@@ -94,6 +94,7 @@ router.post("/", async (c: Context) => {
 		});
 	await server.connect(transport);
 	try {
+		// biome-ignore lint/suspicious/noExplicitAny: Requests body typed oddly
 		await transport.handleRequest(req, res, (req as any).body as unknown);
 	} catch (error) {
 		logger.error("Error handling MCP request", error);

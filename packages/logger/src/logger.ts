@@ -26,11 +26,7 @@ export interface Logger {
  * Create a lightweight logger instance using chalk for colors
  */
 export const createLogger = (options: LoggerOptions = {}): Logger => {
-	const {
-		level = "info",
-		service = "macos-tools",
-		silent = false,
-	} = options;
+	const { level = "info", service = "macos-tools", silent = false } = options;
 
 	const minLevel = LOG_LEVELS[level as LogLevel] ?? LOG_LEVELS.info;
 
@@ -81,8 +77,10 @@ export const createLogger = (options: LoggerOptions = {}): Logger => {
 	return {
 		debug: (message: string, ...meta: unknown[]) =>
 			log("debug", message, ...meta),
-		info: (message: string, ...meta: unknown[]) => log("info", message, ...meta),
-		warn: (message: string, ...meta: unknown[]) => log("warn", message, ...meta),
+		info: (message: string, ...meta: unknown[]) =>
+			log("info", message, ...meta),
+		warn: (message: string, ...meta: unknown[]) =>
+			log("warn", message, ...meta),
 		error: (message: string, ...meta: unknown[]) =>
 			log("error", message, ...meta),
 	};

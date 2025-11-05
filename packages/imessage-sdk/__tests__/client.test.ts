@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noExplicitAny: Test code
 import { describe, expect, it, vi } from "vitest";
 import { IMessageClient } from "../src/client";
 import type { Chat, Handle } from "../src/types";
