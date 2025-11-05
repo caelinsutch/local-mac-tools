@@ -6,7 +6,7 @@
  *
  * @example
  * ```typescript
- * import { IMessageClient } from '@imessage-tools/sdk';
+ * import { IMessageClient } from '@macos-tools/imessage-sdk';
  *
  * const client = new IMessageClient();
  *

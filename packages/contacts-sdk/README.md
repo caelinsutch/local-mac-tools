@@ -1,4 +1,4 @@
-# @imessage-tools/contacts-sdk
+# @macos-tools/contacts-sdk
 
 A TypeScript SDK for querying macOS Contacts data. Search and retrieve contact information including names, phone numbers, emails, and organizations from your Mac's Contacts app.
 
@@ -21,11 +21,11 @@ A TypeScript SDK for querying macOS Contacts data. Search and retrieve contact i
 ## Installation
 
 ```bash
-npm install @imessage-tools/contacts-sdk
+npm install @macos-tools/contacts-sdk
 # or
-yarn add @imessage-tools/contacts-sdk
+yarn add @macos-tools/contacts-sdk
 # or
-pnpm add @imessage-tools/contacts-sdk
+pnpm add @macos-tools/contacts-sdk
 ```
 
 ## Granting Full Disk Access
@@ -40,7 +40,7 @@ To access the Contacts database, your terminal or application needs Full Disk Ac
 ## Quick Start
 
 ```typescript
-import { ContactsClient } from '@imessage-tools/contacts-sdk';
+import { ContactsClient } from '@macos-tools/contacts-sdk';
 
 // Initialize the client
 const client = new ContactsClient();

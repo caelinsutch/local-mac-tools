@@ -1,5 +1,5 @@
 {
-	"extends": "@imessage-tools/typescript-config/base.json",
+	"extends": "@macos-tools/typescript-config/base.json",
 	"compilerOptions": {
 		"outDir": "./dist",
 		"rootDir": "./src"

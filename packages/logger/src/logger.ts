@@ -12,7 +12,7 @@ export interface LoggerOptions {
 export const createLogger = (options: LoggerOptions = {}): winston.Logger => {
 	const {
 		level = "info",
-		service = "imessage-tools",
+		service = "macos-tools",
 		silent = false,
 	} = options;
 

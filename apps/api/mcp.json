@@ -1,8 +1,11 @@
 {
 	"mcpServers": {
-		"imessage-tools": {
+		"macos-tools": {
 			"command": "npx",
-			"args": ["-y", "@imessage-tools/mcp-server"]
+			"args": ["-y", "@macos-tools/mcp-server"],
+			"env": {
+				"PORT": "3000"
+			}
 		}
 	}
 }

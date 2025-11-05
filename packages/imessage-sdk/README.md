@@ -34,7 +34,7 @@ To access the iMessage database, you need to grant Full Disk Access:
 ## Installation
 
 ```bash
-npm install @imessage-tools/sdk
+npm install @macos-tools/imessage-sdk
 ```
 
 Or if you're working in the monorepo:
@@ -46,7 +46,7 @@ pnpm install
 ## Quick Start
 
 ```typescript
-import { IMessageClient } from '@imessage-tools/sdk';
+import { IMessageClient } from '@macos-tools/imessage-sdk';
 
 // Initialize the client
 const client = new IMessageClient();
@@ -239,7 +239,7 @@ interface Chat {
 ### Date Conversion
 
 ```typescript
-import { appleTimeToDate, dateToAppleTime } from '@imessage-tools/sdk';
+import { appleTimeToDate, dateToAppleTime } from '@macos-tools/imessage-sdk';
 
 // Convert Apple timestamp to JavaScript Date
 const date = appleTimeToDate(message.date);
@@ -251,7 +251,7 @@ const appleTime = dateToAppleTime(new Date());
 ### Format Handle
 
 ```typescript
-import { formatHandle } from '@imessage-tools/sdk';
+import { formatHandle } from '@macos-tools/imessage-sdk';
 
 const formatted = formatHandle('+11234567890');
 // Returns: "+1 (123) 456-7890"
@@ -262,7 +262,7 @@ const formatted = formatHandle('+11234567890');
 ### Example 1: Get Recent Messages
 
 ```typescript
-import { IMessageClient, appleTimeToDate } from '@imessage-tools/sdk';
+import { IMessageClient, appleTimeToDate } from '@macos-tools/imessage-sdk';
 
 const client = new IMessageClient();
 
@@ -282,7 +282,7 @@ client.close();
 ### Example 2: Search Messages
 
 ```typescript
-import { IMessageClient } from '@imessage-tools/sdk';
+import { IMessageClient } from '@macos-tools/imessage-sdk';
 
 const client = new IMessageClient();
 
@@ -300,7 +300,7 @@ client.close();
 ### Example 3: Get Group Chats
 
 ```typescript
-import { IMessageClient } from '@imessage-tools/sdk';
+import { IMessageClient } from '@macos-tools/imessage-sdk';
 
 const client = new IMessageClient();
 
@@ -318,7 +318,7 @@ client.close();
 ### Example 4: Conversation Statistics
 
 ```typescript
-import { IMessageClient } from '@imessage-tools/sdk';
+import { IMessageClient } from '@macos-tools/imessage-sdk';
 
 const client = new IMessageClient();
 

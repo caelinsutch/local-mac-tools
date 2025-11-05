@@ -1,7 +1,7 @@
 {
-	"name": "@imessage-tools/logger",
+	"name": "@macos-tools/logger",
 	"version": "1.0.0",
-	"description": "Shared Winston-based logger for imessage-tools",
+	"description": "Shared Winston-based logger for macos-tools",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -38,7 +38,7 @@
 	"devDependencies": {
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@imessage-tools/typescript-config": "workspace:*",
+		"@macos-tools/typescript-config": "workspace:*",
 		"tsup": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"

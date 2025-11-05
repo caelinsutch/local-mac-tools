@@ -1,5 +1,5 @@
 {
-	"name": "@imessage-tools/sdk",
+	"name": "@macos-tools/imessage-sdk",
 	"version": "1.0.0",
 	"description": "A TypeScript SDK for querying iMessage data on macOS",
 	"main": "./dist/index.js",
@@ -44,7 +44,7 @@
 		"@types/better-sqlite3": "catalog:",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@imessage-tools/typescript-config": "workspace:*",
+		"@macos-tools/typescript-config": "workspace:*",
 		"tsup": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"

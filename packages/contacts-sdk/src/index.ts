@@ -1,5 +1,5 @@
 /**
- * @imessage-tools/contacts-sdk
+ * @macos-tools/contacts-sdk
  *
  * A TypeScript SDK for querying macOS Contacts data via AppleScript
  */

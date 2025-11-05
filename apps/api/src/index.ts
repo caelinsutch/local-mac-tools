@@ -1,6 +1,7 @@
+#!/usr/bin/env node
 import { serve } from "@hono/node-server";
-import { ContactsClient } from "@imessage-tools/contacts-sdk";
-import { createLogger } from "@imessage-tools/logger";
+import { ContactsClient } from "@macos-tools/contacts-sdk";
+import { createLogger } from "@macos-tools/logger";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
@@ -11,7 +12,7 @@ import { zodown } from "zodown";
 const logger = createLogger({ service: "mcp-server" });
 
 const server = new McpServer({
-	name: "imessage-tools",
+	name: "macos-tools",
 	version: "1.0.0",
 });
 
@@ -171,28 +172,31 @@ router.delete("/", (c: Context) => {
 	return toFetchResponse(res);
 });
 
-const port = 3000;
+const port = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 3000;
 
-// For local development with Bun
-if (import.meta.main) {
-	logger.info(`Starting MCP server on http://localhost:${port}`);
-	logger.info(`MCP endpoint: http://localhost:${port}`);
-	console.log("");
-	console.log("Add this to your Claude Desktop config:");
-	console.log(
-		JSON.stringify(
-			{
-				"imessage-tools": {
-					command: "npx",
-					args: ["-y", "mcp-remote", `http://localhost:${port}`],
+// Display startup information
+logger.info(`Starting MCP server on http://localhost:${port}`);
+logger.info(`MCP endpoint: http://localhost:${port}`);
+console.log("");
+console.log("✅ MCP Server is running!");
+console.log("");
+console.log("Add this to your Claude Desktop config:");
+console.log(
+	JSON.stringify(
+		{
+			"macos-tools": {
+				command: "npx",
+				args: ["-y", "@macos-tools/mcp-server"],
+				env: {
+					PORT: port.toString(),
 				},
 			},
-			null,
-			2,
-		),
-	);
-	console.log("");
-}
+		},
+		null,
+		2,
+	),
+);
+console.log("");
 
 serve({
 	fetch: router.fetch,

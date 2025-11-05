@@ -1,5 +1,5 @@
 {
-	"name": "@imessage-tools/contacts-sdk",
+	"name": "@macos-tools/contacts-sdk",
 	"version": "1.0.0",
 	"description": "A TypeScript SDK for querying macOS Contacts data",
 	"main": "./dist/index.js",
@@ -41,7 +41,7 @@
 	"devDependencies": {
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@imessage-tools/typescript-config": "workspace:*",
+		"@macos-tools/typescript-config": "workspace:*",
 		"tsup": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"

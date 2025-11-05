@@ -1,5 +1,5 @@
 {
-	"name": "imessage-tools",
+	"name": "macos-tools",
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",

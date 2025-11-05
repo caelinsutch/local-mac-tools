@@ -1,6 +1,32 @@
-# iMessage Tools MCP Server
+# macOS Tools MCP Server
 
 A Model Context Protocol (MCP) server that provides access to macOS Contacts data through Claude Desktop and other MCP clients.
+
+## Quick Start
+
+The fastest way to get started is via npx:
+
+```bash
+npx @macos-tools/mcp-server
+```
+
+Or add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "macos-tools": {
+      "command": "npx",
+      "args": ["-y", "@macos-tools/mcp-server"],
+      "env": {
+        "PORT": "3000"
+      }
+    }
+  }
+}
+```
+
+Then restart Claude Desktop to use the MCP tools.
 
 ## Features
 
@@ -55,6 +81,25 @@ cd apps/api
 pnpm install
 ```
 
+## Port Configuration
+
+The server port can be configured via environment variables:
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and set your desired port (default: 3000):
+```env
+PORT=3000
+```
+
+You can also set the port directly when running:
+```bash
+PORT=8080 pnpm run dev
+```
+
 ## Development
 
 Start the development server:
@@ -63,9 +108,49 @@ Start the development server:
 pnpm run dev
 ```
 
-The server will start at `http://localhost:8787` (Cloudflare Workers default port).
+The server will start at `http://localhost:3000` (or the port specified in your `.env` file).
 
-Visit `http://localhost:8787/` to see the available tools and server info.
+Visit `http://localhost:3000/` to see the available tools and server info.
+
+## Building for Production
+
+Build the server for production:
+
+```bash
+pnpm run build
+```
+
+This will create an optimized production build in the `dist` directory using tsup.
+
+## Running in Production
+
+After building, start the production server:
+
+```bash
+pnpm run start
+```
+
+Or with a custom port:
+
+```bash
+PORT=8080 pnpm run start
+```
+
+## Running via npx
+
+You can run the server directly via npx without cloning the repository:
+
+```bash
+npx @macos-tools/mcp-server
+```
+
+Or with a custom port:
+
+```bash
+PORT=8080 npx @macos-tools/mcp-server
+```
+
+This is useful for quick setup or for Claude Desktop configurations.
 
 ## Connecting to Claude Desktop
 
@@ -79,6 +164,7 @@ Edit your Claude Desktop configuration file:
 
 Add the MCP server configuration:
 
+**Option 1: Connect to a locally running server**
 ```json
 {
   "mcpServers": {
@@ -87,12 +173,34 @@ Add the MCP server configuration:
       "args": [
         "-y",
         "mcp-remote",
-        "http://localhost:8787/mcp"
+        "http://localhost:3000"
       ]
     }
   }
 }
 ```
+
+**Note**: If you configured a custom port in your `.env` file, make sure to update the URL accordingly (e.g., `http://localhost:8080`).
+
+**Option 2: Run directly via npx (simpler setup)**
+```json
+{
+  "mcpServers": {
+    "imessage-contacts": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@macos-tools/mcp-server"
+      ],
+      "env": {
+        "PORT": "3000"
+      }
+    }
+  }
+}
+```
+
+This option automatically starts the server when Claude Desktop launches.
 
 **Note**: If the config file doesn't exist, you may need to enable Developer mode in Claude Desktop settings first.
 
@@ -261,7 +369,7 @@ Get the total number of contacts.
 4. Completely quit Claude Desktop (not just close the window) and restart
 5. Check Claude Desktop logs for errors
 
-### "Cannot find module '@imessage-tools/contacts-sdk'" error
+### "Cannot find module '@macos-tools/contacts-sdk'" error
 
 **Solution:** Run `pnpm install` from the repository root to install workspace dependencies.
 
@@ -335,6 +443,6 @@ If you need remote access to contacts data, consider:
 
 - [Hono](https://hono.dev/) - Web framework
 - [mcp-handler](https://www.npmjs.com/package/mcp-handler) - MCP adapter for Hono
-- [@imessage-tools/contacts-sdk](../../packages/contacts-sdk) - Contacts database SDK
+- [@macos-tools/contacts-sdk](../../packages/contacts-sdk) - Contacts database SDK
 - [Zod](https://zod.dev/) - Schema validation
 - [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) - SQLite database access
