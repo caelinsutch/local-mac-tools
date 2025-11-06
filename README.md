@@ -122,7 +122,7 @@ pnpm run format
 
 - [x] Contacts search functionality
 - [x] Basic MCP server implementation
-- [ ] iMessage query tools (SDK complete, MCP integration pending)
+- [x] iMessage query tools (SDK complete, MCP integration pending)
 - [ ] Send iMessages through MCP
 - [ ] General AppleScript/OSA command execution
 - [ ] Notes app integration

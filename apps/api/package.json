@@ -39,7 +39,7 @@
 		"mcp.json"
 	],
 	"scripts": {
-		"dev": "tsx --watch src/index.ts",
+		"dev": "tsx --watch src/**",
 		"build": "tsup && chmod +x dist/*.js",
 		"start": "node dist/index.js",
 		"check-types": "tsc --noEmit",
@@ -48,6 +48,7 @@
 	"dependencies": {
 		"@hono/node-server": "^1.19.6",
 		"@macos-tools/contacts-sdk": "workspace:*",
+		"@macos-tools/imessage-sdk": "workspace:*",
 		"@macos-tools/logger": "workspace:*",
 		"@modelcontextprotocol/sdk": "^1.20.2",
 		"fetch-to-node": "^2.1.0",

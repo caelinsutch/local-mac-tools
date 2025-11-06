@@ -1,26 +1,10 @@
-import { IMessageClient } from "@macos-tools/imessage-sdk";
+import { formatMessage, IMessageClient } from "@macos-tools/imessage-sdk";
 import { createLogger } from "@macos-tools/logger";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod/v3";
+import { formatToolError } from "./utils";
 
 const logger = createLogger({ service: "mcp-server:imessage" });
-
-/**
- * Formats a message for display
- */
-function formatMessage(msg: {
-	ROWID: number;
-	text: string | null;
-	is_from_me: number;
-	date: number;
-	handle_identifier?: string;
-}): string {
-	const sender = msg.is_from_me ? "Me" : msg.handle_identifier || "Unknown";
-	const text = msg.text || "[No text content]";
-	// Apple time is nanoseconds since 2001-01-01, convert to readable date
-	const date = new Date(msg.date / 1000000 + 978307200000);
-	return `[${date.toISOString()}] ${sender}: ${text}`;
-}
 
 /**
  * Formats a chat for display
@@ -64,7 +48,9 @@ export function registerIMessageTools(server: McpServer): void {
 				isFromMe: z
 					.boolean()
 					.optional()
-					.describe("Filter by sender: true for messages you sent, false for received"),
+					.describe(
+						"Filter by sender: true for messages you sent, false for received",
+					),
 				service: z
 					.string()
 					.optional()
@@ -72,11 +58,15 @@ export function registerIMessageTools(server: McpServer): void {
 				startDate: z
 					.string()
 					.optional()
-					.describe("ISO 8601 date string for earliest message (e.g., '2024-01-01')"),
+					.describe(
+						"ISO 8601 date string for earliest message (e.g., '2024-01-01')",
+					),
 				endDate: z
 					.string()
 					.optional()
-					.describe("ISO 8601 date string for latest message (e.g., '2024-12-31')"),
+					.describe(
+						"ISO 8601 date string for latest message (e.g., '2024-12-31')",
+					),
 				limit: z
 					.number()
 					.optional()
@@ -148,14 +138,7 @@ export function registerIMessageTools(server: McpServer): void {
 				};
 			} catch (error) {
 				logger.error("imessage_search_messages error", error);
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Error searching messages: ${error instanceof Error ? error.message : "Unknown error"}`,
-						},
-					],
-				};
+				return formatToolError("Error searching messages", error);
 			}
 		},
 	);
@@ -180,7 +163,9 @@ export function registerIMessageTools(server: McpServer): void {
 			logger.info("imessage_get_recent_chats called", args);
 
 			try {
-				const chats = imessageClient.getRecentChats((args.limit as number) || 20);
+				const chats = imessageClient.getRecentChats(
+					(args.limit as number) || 20,
+				);
 
 				logger.info("imessage_get_recent_chats results", {
 					resultCount: chats.length,
@@ -198,14 +183,22 @@ export function registerIMessageTools(server: McpServer): void {
 				}
 
 				const formattedChats = chats.map((chat) => {
-					const participants = imessageClient.getParticipantsForChat(chat.ROWID);
+					const participants = imessageClient.getParticipantsForChat(
+						chat.ROWID,
+					);
 					const participantNames = participants.map((p) => p.id).join(", ");
-					const lastMessages = imessageClient.getMessagesForChat(chat.ROWID, 1);
-					const lastMessage = lastMessages[0]
-						? `\n  Last: ${lastMessages[0].text || "[No text]"}`
-						: "";
 
-					return `${formatChat(chat)}\n  Participants: ${participantNames}${lastMessage}`;
+					// Get last 3 messages for preview
+					const lastMessages = imessageClient.getMessagesForChat(chat.ROWID, 3);
+					let messagesPreview = "";
+					if (lastMessages.length > 0) {
+						messagesPreview = "\n  Recent messages:";
+						for (const msg of lastMessages.reverse()) {
+							messagesPreview += `\n    ${formatMessage(msg)}`;
+						}
+					}
+
+					return `${formatChat(chat)}\n  Participants: ${participantNames}${messagesPreview}`;
 				});
 
 				return {
@@ -218,14 +211,7 @@ export function registerIMessageTools(server: McpServer): void {
 				};
 			} catch (error) {
 				logger.error("imessage_get_recent_chats error", error);
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Error getting recent chats: ${error instanceof Error ? error.message : "Unknown error"}`,
-						},
-					],
-				};
+				return formatToolError("Error getting recent chats", error);
 			}
 		},
 	);
@@ -304,78 +290,141 @@ export function registerIMessageTools(server: McpServer): void {
 				};
 			} catch (error) {
 				logger.error("imessage_get_chat_history error", error);
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Error getting chat history: ${error instanceof Error ? error.message : "Unknown error"}`,
-						},
-					],
-				};
+				return formatToolError("Error getting chat history", error);
 			}
 		},
 	);
 
-	// Tool 4: Get conversation statistics
+	// Tool 4: Get messages by date
 	server.registerTool(
-		"imessage_get_conversation_stats",
+		"imessage_get_messages_by_date",
 		{
-			title: "imessage_get_conversation_stats",
+			title: "imessage_get_messages_by_date",
 			description:
-				"Get statistics for iMessage conversations, including message counts, " +
-				"sent vs received ratios, and date ranges. " +
-				"Can get stats for a specific chat or overall statistics.",
+				"Get all messages sent or received on a specific date or date range. " +
+				"Useful for recalling 'What did I discuss last Tuesday?' or 'Show me messages from last week'. " +
+				"Returns messages with sender, timestamp, and content.",
 			inputSchema: {
-				chatId: z
-					.number()
+				date: z
+					.string()
 					.optional()
 					.describe(
-						"Optional chat ID to get stats for a specific conversation. Omit for overall stats.",
+						"Specific date in ISO 8601 format (e.g., '2024-01-15'). Gets all messages from that day.",
 					),
+				startDate: z
+					.string()
+					.optional()
+					.describe(
+						"Start date for date range in ISO 8601 format (e.g., '2024-01-01')",
+					),
+				endDate: z
+					.string()
+					.optional()
+					.describe(
+						"End date for date range in ISO 8601 format (e.g., '2024-01-31')",
+					),
+				contactIdentifier: z
+					.string()
+					.optional()
+					.describe("Optional: filter by specific contact (phone or email)"),
+				limit: z
+					.number()
+					.optional()
+					.describe("Maximum number of results to return (default: 100)"),
 			},
 		},
 		async (args) => {
-			logger.info("imessage_get_conversation_stats called", args);
+			logger.info("imessage_get_messages_by_date called", args);
 
 			try {
-				const stats = imessageClient.getConversationStats(
-					args.chatId as number | undefined,
-				);
+				let startDate: Date | undefined;
+				let endDate: Date | undefined;
 
-				logger.info("imessage_get_conversation_stats results", { stats });
+				// If specific date provided, set start/end to cover that whole day
+				if (args.date) {
+					startDate = new Date(args.date as string);
+					endDate = new Date(args.date as string);
+					endDate.setDate(endDate.getDate() + 1); // Next day at midnight
+				} else {
+					// Use provided date range
+					startDate = args.startDate
+						? new Date(args.startDate as string)
+						: undefined;
+					endDate = args.endDate ? new Date(args.endDate as string) : undefined;
+				}
 
-				const scope = args.chatId ? `for chat #${args.chatId}` : "overall";
-				const firstDate = stats.firstMessageDate
-					? stats.firstMessageDate.toISOString()
-					: "N/A";
-				const lastDate = stats.lastMessageDate
-					? stats.lastMessageDate.toISOString()
-					: "N/A";
+				// Convert contact identifier to handle ID if provided
+				let handleId: number | undefined;
+				if (args.contactIdentifier) {
+					const handle = imessageClient.getHandleByIdentifier(
+						args.contactIdentifier as string,
+					);
+					if (handle) {
+						handleId = handle.ROWID;
+					}
+				}
+
+				const messages = imessageClient.getMessages({
+					startDate,
+					endDate,
+					handleId,
+					limit: (args.limit as number) || 100,
+				});
+
+				logger.info("imessage_get_messages_by_date results", {
+					resultCount: messages.length,
+				});
+
+				if (messages.length === 0) {
+					const dateDesc = args.date
+						? `on ${args.date}`
+						: `between ${args.startDate || "start"} and ${args.endDate || "now"}`;
+					return {
+						content: [
+							{
+								type: "text",
+								text: `No messages found ${dateDesc}.`,
+							},
+						],
+					};
+				}
+
+				// Group messages by conversation for better readability
+				const messagesByChat = new Map<string, typeof messages>();
+				for (const msg of messages) {
+					const key = msg.account || "Unknown";
+					if (!messagesByChat.has(key)) {
+						messagesByChat.set(key, []);
+					}
+					messagesByChat.get(key)?.push(msg);
+				}
+
+				const formattedOutput: string[] = [];
+				for (const [contact, msgs] of messagesByChat) {
+					formattedOutput.push(
+						`Conversation with ${contact} (${msgs.length} messages):`,
+					);
+					formattedOutput.push(
+						msgs.map((msg) => `  ${formatMessage(msg)}`).join("\n"),
+					);
+					formattedOutput.push("");
+				}
+
+				const dateDesc = args.date
+					? `on ${args.date}`
+					: `from ${args.startDate || "start"} to ${args.endDate || "now"}`;
 
 				return {
 					content: [
 						{
 							type: "text",
-							text:
-								`Conversation statistics ${scope}:\n\n` +
-								`Total messages: ${stats.totalMessages}\n` +
-								`Sent by you: ${stats.sentMessages}\n` +
-								`Received: ${stats.receivedMessages}\n` +
-								`First message: ${firstDate}\n` +
-								`Last message: ${lastDate}`,
+							text: `Found ${messages.length} message(s) ${dateDesc}:\n\n${formattedOutput.join("\n")}`,
 						},
 					],
 				};
 			} catch (error) {
-				logger.error("imessage_get_conversation_stats error", error);
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Error getting conversation stats: ${error instanceof Error ? error.message : "Unknown error"}`,
-						},
-					],
-				};
+				logger.error("imessage_get_messages_by_date error", error);
+				return formatToolError("Error getting messages by date", error);
 			}
 		},
 	);

@@ -61,18 +61,47 @@ export function isGroupChat(chatIdentifier: string): boolean {
 
 /**
  * Safely parses attributedBody blob (for macOS Ventura+)
- * Note: This is a simplified version. Full parsing requires handling Apple's proprietary format
+ * Based on the Python approach: extract text between NSString and NSDictionary markers
  */
 export function parseAttributedBody(buffer: Buffer | null): string | null {
 	if (!buffer) return null;
 
 	try {
-		// This is a simplified extraction - real implementation would need proper binary parsing
-		const text = buffer.toString("utf8");
-		// Look for readable text in the buffer
+		// Decode buffer as UTF-8, replacing invalid sequences
+		let attributedBody = buffer.toString("utf8");
+
+		// Check if this is an NSAttributedString format
+		if (attributedBody.includes("NSNumber")) {
+			// Split by NSNumber and take the first part
+			attributedBody = attributedBody.split("NSNumber")[0];
+
+			// Look for content between NSString and NSDictionary
+			if (attributedBody.includes("NSString")) {
+				attributedBody = attributedBody.split("NSString")[1];
+
+				if (attributedBody.includes("NSDictionary")) {
+					attributedBody = attributedBody.split("NSDictionary")[0];
+
+					// Clean up: remove first 6 and last 12 characters (encoding artifacts)
+					if (attributedBody.length > 18) {
+						attributedBody = attributedBody.substring(
+							6,
+							attributedBody.length - 12,
+						);
+						return attributedBody.trim();
+					}
+				}
+			}
+		}
+
+		// Fallback: try original regex approach
 		// biome-ignore lint/suspicious/noControlCharactersInRegex: Necessary for parsing the buffer
-		const match = text.match(/NSString[^\x00]*?\x00([^\x00]+)/);
-		return match ? match[1] : null;
+		const match = attributedBody.match(/NSString[^\x00]*?\x00([^\x00]+)/);
+		if (match?.[1]) {
+			return match[1].trim();
+		}
+
+		return null;
 	} catch (_error) {
 		return null;
 	}
@@ -95,4 +124,43 @@ export function validateDatabasePath(path: string): boolean {
 	} catch {
 		return false;
 	}
+}
+
+/**
+ * Message interface for formatting
+ */
+export interface FormattableMessage {
+	is_from_me: number;
+	text?: string | null;
+	attributedBody?: Buffer | string | null;
+	date: number;
+	handle?: {
+		id: string;
+	};
+}
+
+/**
+ * Formats a message for display
+ * Uses enriched message data when available (handle.id) for better display
+ * @param msg Message object to format (preferably EnrichedMessage)
+ * @returns Formatted string with timestamp, sender, and text
+ */
+export function formatMessage(msg: FormattableMessage): string {
+	const sender = msg.is_from_me ? "Me" : msg.handle?.id || "Unknown";
+
+	// Handle both Buffer and string attributedBody
+	let text: string | null = null;
+	if (msg.attributedBody) {
+		if (Buffer.isBuffer(msg.attributedBody)) {
+			text = parseAttributedBody(msg.attributedBody) ?? msg.text ?? null;
+		} else {
+			text = msg.attributedBody;
+		}
+	} else {
+		text = msg.text ?? null;
+	}
+
+	// Apple time is nanoseconds since 2001-01-01, convert to readable date
+	const date = appleTimeToDate(msg.date);
+	return `[${date.toISOString()}] ${sender}: ${text ?? ""}`;
 }
