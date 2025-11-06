@@ -8,7 +8,78 @@ export interface Contact {
 	phone: string;
 }
 
+export interface SendMessageOptions {
+	/**
+	 * The recipient's phone number or email address
+	 */
+	recipient: string;
+	/**
+	 * The message text to send
+	 */
+	message: string;
+}
+
+export interface SendMessageResult {
+	success: boolean;
+	error?: string;
+}
+
 export class ContactsClient {
+	/**
+	 * Send an iMessage or SMS to a recipient
+	 * Attempts SMS first, falls back to iMessage if SMS fails
+	 * @param options The message options
+	 * @returns Promise with result indicating success or error
+	 */
+	async sendMessage(
+		options: SendMessageOptions,
+	): Promise<SendMessageResult> {
+		const { recipient, message } = options;
+
+		// Escape the message for AppleScript
+		const escapedMessage = message.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+		const escapedRecipient = recipient
+			.replace(/\\/g, "\\\\")
+			.replace(/"/g, '\\"');
+
+		const script = `tell application "Messages"
+	set smsMessageType to id of 1st account whose service type = SMS
+	set smsRecipient to participant "${escapedRecipient}" of account id smsMessageType
+	set iMessageType to (id of 1st account whose service type = iMessage)
+	set iMessageRecipient to participant "${escapedRecipient}" of account id iMessageType
+
+	try
+		send "${escapedMessage}" to smsRecipient
+		return "success"
+	on error
+		try
+			send "${escapedMessage}" to iMessageRecipient
+			return "success"
+		on error errmsg
+			return "error:" & errmsg
+		end try
+	end try
+end tell`;
+
+		try {
+			const result = await executeOSAScript(script);
+
+			if (result.startsWith("error:")) {
+				return {
+					success: false,
+					error: result.substring(6),
+				};
+			}
+
+			return { success: true };
+		} catch (error) {
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : String(error),
+			};
+		}
+	}
+
 	/**
 	 * Search contacts by name
 	 */
