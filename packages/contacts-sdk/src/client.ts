@@ -31,9 +31,7 @@ export class ContactsClient {
 	 * @param options The message options
 	 * @returns Promise with result indicating success or error
 	 */
-	async sendMessage(
-		options: SendMessageOptions,
-	): Promise<SendMessageResult> {
+	async sendMessage(options: SendMessageOptions): Promise<SendMessageResult> {
 		const { recipient, message } = options;
 
 		// Escape the message for AppleScript
