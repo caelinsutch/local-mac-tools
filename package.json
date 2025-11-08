@@ -9,10 +9,14 @@
 		"lint:fix": "biome check --write .",
 		"format": "biome format --write .",
 		"check-types": "turbo run check-types",
-		"prepare": "husky"
+		"prepare": "husky",
+		"changeset": "changeset",
+		"version": "changeset version && pnpm install --no-frozen-lockfile",
+		"release": "pnpm build && changeset publish"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.1",
+		"@changesets/cli": "^2.29.7",
 		"husky": "^9.1.7",
 		"tsx": "^4.19.2",
 		"turbo": "^2.5.8",
