@@ -257,7 +257,18 @@ ORDER BY attachment_count DESC
 				}
 
 				// Format results as a table
-				const columns = Object.keys(results[0]);
+				const firstResult = results[0];
+				if (!firstResult) {
+					return {
+						content: [
+							{
+								type: "text",
+								text: "Query executed successfully but returned no results.",
+							},
+						],
+					};
+				}
+				const columns = Object.keys(firstResult);
 				const maxWidths = columns.map((col) => {
 					const values = results.map((row) =>
 						String((row as Record<string, unknown>)[col] || ""),

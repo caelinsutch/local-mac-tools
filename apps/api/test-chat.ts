@@ -39,7 +39,7 @@ const messages = client.getMessagesForChat(2620, 5);
 console.log(`\n💬 Last ${messages.length} Messages:\n`);
 
 for (const msg of messages.reverse()) {
-	const sender = msg.is_from_me ? "You" : msg.handle_identifier || "Unknown";
+	const sender = msg.is_from_me ? "You" : msg.handle?.id || "Unknown";
 	const date = new Date(msg.date / 1000000 + 978307200000);
 
 	console.log("-".repeat(80));
