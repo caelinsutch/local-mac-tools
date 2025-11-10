@@ -18,10 +18,10 @@
 	"scripts": {
 		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
-		"test": "vitest run --exclude __tests__/integration.test.ts",
-		"test:watch": "vitest --exclude __tests__/integration.test.ts",
-		"test:integration": "vitest run __tests__/integration.test.ts",
-		"test:all": "vitest run",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:integration": "vitest run --config vitest.config.integration.ts",
+		"test:all": "vitest run --config vitest.config.all.ts",
 		"test:coverage": "vitest run --coverage",
 		"typecheck": "tsc --noEmit",
 		"check-types": "tsc --noEmit"
