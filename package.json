@@ -1,5 +1,5 @@
 {
-	"name": "macos-tools",
+	"name": "local-mac-mcp",
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",
