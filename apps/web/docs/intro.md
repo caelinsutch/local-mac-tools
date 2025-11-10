@@ -89,7 +89,7 @@ pnpm --filter @macos-tools/mcp-server dev
 ## Getting Help
 
 - **Documentation**: Browse the sidebar for detailed guides.
-- **GitHub Issues**: [Report bugs or request features](https://github.com/caelinsutch/imessage-tools/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/caelinsutch/imessage-tools/issues).
 - **MCP Documentation**: [Learn about Model Context Protocol](https://modelcontextprotocol.io)
 
 ## License
